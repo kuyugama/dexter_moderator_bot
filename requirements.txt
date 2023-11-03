@@ -1,0 +1,6 @@
+redis[hiredis]
+aiogram==2.24
+asyncpg
+sqlalchemy
+machine2human==0.0.4
+pyyaml
