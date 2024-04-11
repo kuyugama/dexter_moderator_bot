@@ -127,6 +127,9 @@ class MemberIsAdmin(Filter):
         else:
             return
 
+        if chat.type not in ("group", "supergroup"):
+            return False
+
         cache = obj.bot.cache
 
         chat_administrators = await cache.get(f"chat_administrators:{chat.id}")
