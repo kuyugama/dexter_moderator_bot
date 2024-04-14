@@ -1,5 +1,6 @@
 from aiogram import Dispatcher
 
+from ....middlewares import UsernameSaverMiddleware
 from ....utils import types, strings
 from .... import filters, translations
 
@@ -32,7 +33,7 @@ async def pardon_member(message: types.ExtendedMessage):
         if isinstance(mention, int):
             victim = await message.chat.get_member(mention)
         else:
-            user_id = message.bot.cache.get(f"username:{mention}")
+            user_id = message.bot.cache.get(UsernameSaverMiddleware.username2id_template.format(username=mention))
 
             if not user_id:
                 return

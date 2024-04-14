@@ -4,6 +4,7 @@ from aiogram import types, Dispatcher
 from m2h import Hum2Sec
 
 from .... import translations, filters
+from ....middlewares import UsernameSaverMiddleware
 from ....utils import strings
 from ....utils.types import ExtendedMessage
 
@@ -11,12 +12,9 @@ from ....utils.types import ExtendedMessage
 def register_handlers(dp: Dispatcher):
     dp.register_message_handler(
         mute_chat_member,
-        filters.Command(
-            ("mute", "мут"),
-            prefixes=("!", "/")
-        ),
+        filters.Command(("mute", "мут"), prefixes=("!", "/")),
         filters.BotCanRestrict(),
-        filters.MemberCanRestrict() | filters.LocalBotAdmin()
+        filters.MemberCanRestrict() | filters.LocalBotAdmin(),
     )
 
 
@@ -27,10 +25,7 @@ async def mute_chat_member(message: ExtendedMessage):
 
     if not message.reply_to_message and not mention_stack:
         return await message.reply(
-            text=translations.get_string(
-                "mute.target_required",
-                chat.language
-            )
+            text=translations.get_string("mute.target_required", chat.language)
         )
 
     if message.reply_to_message and message.reply_to_message.sender_chat:
@@ -47,7 +42,9 @@ async def mute_chat_member(message: ExtendedMessage):
         if isinstance(mention, int):
             victim = await message.chat.get_member(mention)
         else:
-            user_id = await message.bot.cache.get(f"username2id:{mention}")
+            user_id = await message.bot.cache.get(
+                UsernameSaverMiddleware.username2id_template.format(username=mention)
+            )
 
             if not user_id:
                 return
@@ -56,18 +53,14 @@ async def mute_chat_member(message: ExtendedMessage):
 
     if victim.is_chat_admin():
         return await message.reply(
-            text=translations.get_string(
-                "mute.victim_is_admin",
-                chat.language
-            )
+            text=translations.get_string("mute.victim_is_admin", chat.language)
         )
 
-    elif isinstance(victim, types.ChatMemberRestricted) and not victim.can_send_messages:
+    elif (
+        isinstance(victim, types.ChatMemberRestricted) and not victim.can_send_messages
+    ):
         return await message.reply(
-            text=translations.get_string(
-                "mute.victim_already_muted",
-                chat.language
-            )
+            text=translations.get_string("mute.victim_already_muted", chat.language)
         )
 
     if len(message.text.splitlines()[0].split()) > 1:
@@ -82,30 +75,22 @@ async def mute_chat_member(message: ExtendedMessage):
     cause = message.text.split("\n", maxsplit=1)[1:]
 
     if not len(cause):
-        cause = translations.get_string(
-            "mute.cause_not_specified",
-            chat.language
-        )
+        cause = translations.get_string("mute.cause_not_specified", chat.language)
     else:
         cause = cause[0]
 
     await message.chat.restrict(
         user_id=victim.user.id,
-        permissions=types.ChatPermissions(
-            can_send_messages=False
-        ),
-        until_date=until_date
+        permissions=types.ChatPermissions(can_send_messages=False),
+        until_date=until_date,
     )
 
     await message.reply(
-        text=translations.get_string(
-            "mute.success",
-            chat.language
-        ).format(
+        text=translations.get_string("mute.success", chat.language).format(
             victim=strings.get_mention(victim.user),
             reason=cause,
             by_admin=strings.get_mention(message.from_user),
             time=strings.beautify_time(seconds=time, language=chat.language),
-            until_date=until_date.strftime("%d.%m.%y %H:%M:%S")
+            until_date=until_date.strftime("%d.%m.%y %H:%M:%S"),
         )
     )

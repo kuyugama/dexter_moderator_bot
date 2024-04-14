@@ -12,7 +12,7 @@ def register_handlers(dp: Dispatcher):
         chat_settings,
         filters.Command("settings", no_args=True),
         filters.NotAnonymous(),
-        filters.MemberIsAdmin()
+        filters.MemberIsAdmin(),
     )
 
     dp.register_message_handler(
@@ -119,7 +119,7 @@ async def chat_settings(message: types.Message):
         return await message.reply(
             text="We have a problem. "
             "Settings of group is not found in database. "
-            "Write about this to @youngtitanium"
+            "Write about this to @KuyuGama"
         )
 
     if message.chat.type != "private":
@@ -157,6 +157,11 @@ async def chat_settings(message: types.Message):
                 "values",
                 chat.new_participant_greeting is not None,
                 language=chat.language,
+            ),
+            greeting=(
+                ""
+                if chat.new_participant_greeting is None
+                else chat.new_participant_greeting
             ),
         )
     else:

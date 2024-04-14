@@ -8,10 +8,14 @@ from . import translations
 
 
 class UsernameSaverMiddleware(BaseMiddleware):
+    id2username_template = "id2username:{user_id}"
+    username2id_template = "username2id:{username}"
+
     @staticmethod
     async def process_user(user: types.User, cache: CacheSystem):
-        id2username_key = "id2username:{user_id}".format(user_id=user.id)
-        username2id_key = "username2id:{username}".format(username=user.username)
+        cls = UsernameSaverMiddleware
+        id2username_key = cls.id2username_template.format(user_id=user.id)
+        username2id_key = cls.username2id_template.format(username=user.username)
 
         old_username = await cache.get(id2username_key)
 

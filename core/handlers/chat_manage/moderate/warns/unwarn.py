@@ -1,6 +1,7 @@
 from aiogram import types, Dispatcher
 from sqlalchemy import update
 
+from .....middlewares import UsernameSaverMiddleware
 from .....utils import strings
 from .....database import models
 from ..... import translations, filters
@@ -10,7 +11,7 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(
         unwarn,
         filters.Command(("unwarn", "унварн"), prefixes=("!", "/")),
-        filters.MemberCanRestrict()
+        filters.MemberCanRestrict(),
     )
 
 
@@ -35,7 +36,9 @@ async def unwarn(message: types.Message):
         if isinstance(mention, int):
             victim = await message.chat.get_member(mention)
         else:
-            user_id = message.bot.cache.get(f"username:{mention}")
+            user_id = message.bot.cache.get(
+                UsernameSaverMiddleware.username2id_template.format(username=mention)
+            )
 
             if not user_id:
                 return
@@ -44,15 +47,10 @@ async def unwarn(message: types.Message):
 
     if victim.is_chat_admin():
         return await message.reply(
-            text=translations.get_string(
-                "warn.victim_is_admin",
-                chat.language
-            )
+            text=translations.get_string("warn.victim_is_admin", chat.language)
         )
 
-    member = await message.bot.cache.get_member(
-        victim.user.id, message.chat.id
-    )
+    member = await message.bot.cache.get_member(victim.user.id, message.chat.id)
 
     if not member:
         return await message.reply(
@@ -88,9 +86,7 @@ async def unwarn(message: types.Message):
         )
         await session.commit()
 
-    await message.bot.cache.refresh_member(
-        victim.user.id, message.chat.id
-    )
+    await message.bot.cache.refresh_member(victim.user.id, message.chat.id)
 
     await message.reply(
         text=translations.get_string_by_list(

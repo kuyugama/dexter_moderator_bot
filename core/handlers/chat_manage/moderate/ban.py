@@ -5,6 +5,7 @@ from aiogram import types, Dispatcher
 from m2h import Hum2Sec
 
 from .... import filters, translations
+from ....middlewares import UsernameSaverMiddleware
 from ....utils import strings, types
 
 
@@ -74,7 +75,9 @@ async def ban_chat_member(message: types.ExtendedMessage):
         if isinstance(mention, int):
             victim = await message.chat.get_member(mention)
         else:
-            user_id = message.bot.cache.get(f"username:{mention}")
+            user_id = message.bot.cache.get(
+                UsernameSaverMiddleware.username2id_template.format(username=mention)
+            )
 
             if not user_id:
                 return
@@ -112,15 +115,11 @@ async def ban_chat_member(message: types.ExtendedMessage):
     await asyncio.sleep(300)
 
     if not (
-        await message.bot.cache.get(
-            f"ban_request:{message.chat.id}:{victim.user.id}"
-        )
+        await message.bot.cache.get(f"ban_request:{message.chat.id}:{victim.user.id}")
     ):
         return
 
-    await message.bot.cache.remove(
-        f"ban_request:{message.chat.id}:{victim.user.id}"
-    )
+    await message.bot.cache.remove(f"ban_request:{message.chat.id}:{victim.user.id}")
 
     await message.chat.kick(
         victim.user.id, until_date=until_date + timedelta(minutes=5)

@@ -49,7 +49,7 @@ async def init():
 class CacheSystem:
     def __init__(self, postgresql_connection, redis_connection):
         self._database = postgresql_connection
-        self._redis: aioredis.Redis = redis_connection
+        self._redis: Redis = redis_connection
 
     async def get_chat(self, chat_id: int) -> models.Chat | None:
 

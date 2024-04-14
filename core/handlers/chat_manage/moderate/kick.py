@@ -3,14 +3,15 @@ from aiogram import Dispatcher, types
 from .... import translations
 from .... import filters
 from core.utils import strings
+from ....middlewares import UsernameSaverMiddleware
 
 
 def register_handlers(dp: Dispatcher):
     dp.register_message_handler(
         kick_member,
-        filters.Command(("кік", "кик", "kick"), prefixes=("!", "/")),
+        filters.Command(("кік", "kick"), prefixes=("!", "/")),
         filters.BotCanRestrict(),
-        filters.MemberCanRestrict() | filters.LocalBotAdmin()
+        filters.MemberCanRestrict() | filters.LocalBotAdmin(),
     )
 
 
@@ -41,7 +42,9 @@ async def kick_member(message: types.Message):
         if isinstance(mention, int):
             victim = await message.chat.get_member(mention)
         else:
-            user_id = message.bot.cache.get(f"username:{mention}")
+            user_id = message.bot.cache.get(
+                UsernameSaverMiddleware.username2id_template.format(username=mention)
+            )
 
             if not user_id:
                 return
