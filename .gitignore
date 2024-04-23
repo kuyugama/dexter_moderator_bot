@@ -1,5 +1,7 @@
 venv
 virtualenv
 bot.dexter_moderator.service
-dexter_moderator_bot.zip
 .idea
+alembic.ini
+src/config.ini
+src/database/config.ini

@@ -1,0 +1,444 @@
+name: "English"
+code: "en"
+
+values:
+    true: 'yes'
+    false: 'no'
+    forever: 'Forever'
+    all: "all"
+
+bot_admin_required: "Bot requires chat admin rights for this action."
+bot_cant_restrict_member: "Bot has no rights to restrict member."
+
+bot_added_admin_rights: "Thanks, for admin rights <3"
+bot_removed_admin_rights: "Give me back my rights, otherwise, 
+you can't be able to mute, kick and warn group members with my help."
+
+commands:
+  text: "All my commands:
+  
+  {commands}
+  
+  
+  Open usage of each:"
+  start:
+    desc: "Get started"
+    prefixes:
+      - "/"
+  
+  commands:
+    desc: "Find all commands"
+    prefixes:
+      - "/"
+
+  mute:
+    desc: "Mute a member of the group"
+    usage: "To mute a member of the group you must:
+    
+      1. Reply to his message;
+    
+      2. Specify the muting time (optional, if not specified - the default time from the group settings will be used);
+    
+      3. Specify the reason (optional);
+    
+    
+    Time \"pairs\"(tags) are used to specify the time of muting:
+    
+    1 day/1 hour/1 minute/1 second
+    
+    
+    Example:
+    
+    /mute 1 day 12 hours
+    
+    
+    To specify the reason, you need to write it on a new line:
+    
+    /mute 15 minutes
+    
+    Flood"
+    prefixes:
+      - "/"
+      - "!"
+
+  ban:
+    desc: "Ban a member of the group"
+    usage: "To ban a member of the group you must:
+    
+      1. Reply to his message;
+    
+      2. Specify the ban time (optional, if not specified - the default time from the group settings will be used);
+    
+      3. Specify the reason (optional);
+    
+    
+    Time \"pairs\"(tags) are used to specify the ban time:
+    
+    1 day/1 hour/1 minute/1 second
+    
+    
+    Example:
+    
+    /ban 1 day 12 hours
+    
+    
+    To specify the reason, you need to write it on a new line:
+    
+    /ban 15 minutes
+    
+    Flood"
+    prefixes:
+      - "/"
+      - "!"
+
+  kick:
+    desc: "Kick a member of the group"
+    usage: "To kick a member of the group you must:
+    
+      1. Reply to his message;
+    
+      2. Specify the reason (optional);
+    
+    To specify the reason, you need to write it after the command(or on new line):
+    
+    /kick Flood"
+    prefixes:
+      - "/"
+      - "!"
+
+  pardon:
+    desc: "Pardon a member of the group"
+    usage: "To pardon a member of the group you must:
+    
+      1. Reply to his message;
+      
+      
+      Example:
+      
+      /pardon"
+    prefixes:
+      - "/"
+      - "!"
+
+  warn:
+    desc: "Give the warning to a member of the group"
+    usage: "To give warning to a member of the group you must:
+    
+      1. Reply to his message;
+    
+    
+    Example:
+    
+    /warn"
+    prefixes:
+      - "/"
+      - "!"
+  
+  unwarn:
+    desc: "Take out warning from a member of the group"
+    usage: "To take out warning from a member of the group you must:
+    
+      1. Reply to his message;
+    
+    
+    Example:
+    
+    /unwarn"
+    prefixes:
+      - "/"
+      - "!"
+
+mail:
+  reply_required: "Please reply to the message you want to send into all groups."
+
+  notification: "Newsletter:"
+
+  no_chats: "No chats found."
+
+  start: "Sending this message into all groups.
+  
+  
+  Chats count: {chats_count}
+  
+  
+  Approximate required time: {time}"
+
+  success: "Sending this message into all groups completed successfully.
+  
+  
+  Count of chats with errors: {error_chats_count}
+  
+  
+  Completed in: {time}"
+
+pardon:
+  reply_required: "Please reply to the message of the user you want to pardon"
+
+  target_required: "Please reply to the message or specify ID or tag(username) of the user you want to pardon
+  
+  ID and tag format:
+  
+  id123456 - user ID
+  
+  @username - user username"
+
+  no_punishment: "The user has no restrictions"
+
+  all_restrictions_canceled: "All user restrictions are canceled!"
+
+member_info:
+  member_not_exists: "The user is not yet in the database"
+
+  text: "User {user}:
+
+  warnings: {warns}/{max_warns}"
+
+warn:
+  incorrect_value: "Count of warnings must be a positive integer"
+
+  reply_is_needed: "Please reply to the message of the user you want to warn"
+
+  target_required: "Please reply to the message or specify ID or tag(username) of the user you want to warn
+
+    ID and tag format:
+
+    id123456 - user ID
+
+    @username - user username"
+
+  victim_is_admin: "User you want to warn is the chat admin"
+  member_not_exist: "The user is not yet in the database"
+
+  no_reason: "no reason given"
+
+  success: "{victim}, you have received {warns} by reason «{reason}»"
+  success_with_action: "User {victim} has been punished for reaching the warning limit
+  
+
+  Type of punishment: {action}
+
+  For {action_time}"
+
+unwarn:
+  incorrect_value: "Count of warnings to remove must be a positive integer"
+
+  reply_is_needed: "Please reply to the message of the user you want to unwarn"
+
+  target_required: "Please reply to the message or specify ID or tag(username) of the user you want to unwarn
+
+    ID and tag format:
+
+    id123456 - user ID
+
+    @username - user username"
+
+  no_warnings: "The user has no warnings yet"
+  member_not_exist: "The user is not yet in the database"
+
+  success: "{warnings} have been removed from the user"
+
+ban:
+  reply_is_needed: "Please reply to the message of the user you want to ban"
+
+  target_required: "Please reply to the message or specify ID or tag(username) of the user you want to ban
+
+    ID and tag format:
+
+    id123456 - user ID
+
+    @username - user username"
+
+  victim_is_admin: "User you want to ban is the group admin!"
+  victim_already_banned: "User already banned!"
+
+  no_reason: "no reason given"
+
+  notification: "Dear {victim}
+  
+  Admin {by_admin} requested your ban by reason «{reason}»
+  
+  
+  After 5 minutes you will be banned, but now you are also muted."
+
+  success: "User {victim} successfully banned.
+  
+  
+  Reason: {reason}
+  
+  By: {by_admin}
+  
+  For {time}(until date: {until_date})"
+
+kick:
+  reply_required: "Please reply to the message of the user you want to kick"
+
+  target_required: "Please reply to the message or specify ID or tag(username) of the user you want to kick
+
+    ID and tag format:
+
+    id123456 - user ID
+
+    @username - user username"
+
+  victim_is_admin: "User you want to kick is the group admin!"
+  victim_already_kicked: "User already kicked!"
+
+  no_reason: "no reason given"
+
+  success: "User {victim} has been removed from the group.
+
+
+  Reason: {reason}
+
+  By: {by_admin}"
+
+mute:
+  reply_is_needed: "Please reply to the message of the user you want to mute"
+
+  target_required: "Please reply to the message or specify ID or tag(username) of the user you want to mute
+
+    ID and tag format:
+
+    id123456 - user ID
+
+    @username - user username"
+
+  victim_is_admin: "User you want to mute is the group admin!"
+  victim_already_muted: "User already muted!"
+
+  cause_not_specified: "no reason given"
+
+  success: "User {victim} successfully muted.
+  
+  
+  Reason: {reason}
+  
+  
+  By: {by_admin}
+  
+  
+  For {time}(until date: {until_date})"
+
+settings:
+  private_info: "Chat {name}
+
+  Chat language: {chat_language}"
+  info: 'Chat {name}:
+
+  Is group: {is_group}
+
+  Chat language: {chat_language}
+
+
+  Max warns: {warns_limit}
+
+  Warns action: {warns_action}
+
+  Warns action duration: {warns_action_time}
+
+
+  Default ban duration: {default_ban_time}
+
+  Default mute duration: {default_mute_time}
+
+
+  Has new participants greeting: {has_new_participants_greeting}'
+
+  warns:
+    label: "Warnings"
+    text: "Set up warnings for your chat"
+    limit:
+      label: "Limit"
+      text: "Enter a warnings limit"
+      invalid_value: "Warns limit must be a positive number"
+    action:
+      label: "Punishment"
+      text: "How to penalize a user when he have reached the warnings limit"
+
+    action_time:
+      label: "Punishment duration"
+      text: "Current punishment duration is {time}
+      
+      
+      Write the punishment duration in the format:
+      
+      X days X hours X minutes X seconds
+      
+      Where X should be replaced with your value.
+      
+      
+      You can also specify only one time pair:
+      
+      3 hours
+      
+      
+      ⚠Keep in mind:
+      
+      Less than 30 seconds - punishment forever"
+
+  language:
+    label: "Language"
+    available_languages: 'Available languages: {languages}'
+
+  default_mute_time:
+    label: "Default mute time"
+    text: "Current default mute duration is {time}
+    
+    
+    Write the default mute duration in the format:
+    
+    X days X hours X minutes X seconds
+    
+    Where X should be replaced with your value.
+    
+    
+    You can also specify only one time pair:
+    
+    3 hours
+    
+    
+    ⚠Keep in mind:
+    
+    Less than 30 seconds - mute forever"
+
+  default_ban_time:
+    label: "Default ban time"
+    text: "Current default ban duration is {time}
+
+
+    Write the default ban duration in the format:
+
+    X days X hours X minutes X seconds
+
+    Where X should be replaced with your value.
+
+
+    You can also specify only one time pair:
+
+    3 hours
+
+
+    ⚠Keep in mind:
+
+    Less than 30 seconds - ban forever"
+  welcome_message:
+    label: "Welcome message"
+    text: "Write how to welcome new group members.
+    
+    Tags:
+    
+    - {chat} — Chat name
+    
+    - {user} — User mention"
+  back-button: "Go back"
+  close_dialog: "Close"
+start:
+  group: 'Hi! How are you?
+
+  For commands write: /commands'
+  group_when_added: "Thank you for adding to this group.
+
+
+  Hello everyone, I'm a bot moderator who can help you with moderating your group."
+  private: "Hi, I'm a bot moderator for your groups. Just add me to a group 🔽🔽🔽"
+  private-button: "Add to a group"

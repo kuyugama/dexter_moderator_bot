@@ -1,6 +1,7 @@
-redis[hiredis]
-aiogram==2.24
-asyncpg
-sqlalchemy
+redis[hiredis]==5.0.3
+aiogram==3.5.0
+asyncpg==0.29.0
+sqlalchemy==2.0.29
 machine2human==0.0.4
-pyyaml
+pyyaml==6.0.1
+alembic==1.13.1

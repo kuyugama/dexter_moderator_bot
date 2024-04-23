@@ -1,11 +1,20 @@
 from asyncio import run as run_async
 
-from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.redis import RedisStorage2
+from aiogram import Bot, Dispatcher, types
+from aiogram.client.default import DefaultBotProperties
+from aiogram.fsm.storage.redis import RedisStorage
 
-from core import on_startup, config, middlewares, handlers, database, filters
+from src import config, middlewares, handlers, database, filters
 
 
+bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
+
+storage = RedisStorage(database.redis)
+
+dp = Dispatcher(storage=storage)
+
+
+@dp.message(filters.Command("drop_states"))
 async def drop_states(message):
     states = await database.redis.keys("fsm:*:*:state")
 
@@ -17,6 +26,7 @@ async def drop_states(message):
     await message.reply(text="Dropped all states")
 
 
+@dp.message(filters.Command("drop_caches"))
 async def invalidate_caches(message):
     caches = await database.redis.keys("cache:*")
 
@@ -28,34 +38,28 @@ async def invalidate_caches(message):
     await message.reply(text=f"Dropped {len(caches)} records of cache")
 
 
+@dp.startup()
+async def on_startup():
+    await database.init()
+
+    database.Cache.init_singleton(database.session, database.redis)
+
+
 async def main():
-    bot = Bot(token=config.BOT_TOKEN, parse_mode="HTML")
+    middlewares.ChatMiddleware().register(dp, True)
+    middlewares.MemberMiddleware().register(dp, True)
+    middlewares.UsernameSaverMiddleware().register(dp, True)
 
-    storage = RedisStorage2(
-        host=database.config.REDIS_ADDRESS,
-        port=database.config.REDIS_PORT,
-        username=database.config.REDIS_USERNAME,
-        password=database.config.REDIS_PASSWORD,
-        db=database.config.REDIS_DB,
-    )
-
-    dp = Dispatcher(bot, storage=storage)
-    dp.setup_middleware(middlewares.ChatMiddleware())
-    dp.setup_middleware(middlewares.MemberMiddleware())
-    dp.setup_middleware(middlewares.UsernameSaverMiddleware())
-    dp.register_message_handler(drop_states, filters.Command("drop_states"), state="*")
-    dp.register_message_handler(
-        invalidate_caches, filters.Command("drop_caches"), state="*"
-    )
-    handlers.register_handlers(dp)
-
-    await on_startup(dp)
+    dp.include_router(handlers.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     print("[bot] All updates skipped!")
     print("[bot] Polling started!")
-    print("[bot] Username: ", (await bot.me).username)
-    await dp.start_polling(allowed_updates=["chat_member", "message", "callback_query", "my_chat_member"])
+    print("[bot] Username: ", (await bot.me()).username)
+    await dp.start_polling(
+        bot,
+        allowed_updates=["chat_member", "message", "callback_query", "my_chat_member"],
+    )
 
 
 if __name__ == "__main__":
