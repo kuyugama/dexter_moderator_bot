@@ -1,5 +1,3 @@
-from re import Pattern, compile
-
 from aiogram.filters import Filter
 from aiogram import types
 
@@ -58,21 +56,16 @@ class Command(Filter):
 
     def check_arguments(self, args):
         if self.no_args:
-            return len(args) < 1
-        if len(self.required_arguments) < 1:
+            return len(args) == 0
 
-            return True
-        if len(self.required_arguments) > len(args):
-            return False
-        for equaled_argument, variants in zip(args, self.required_arguments):
-            if all(
-                map(
-                    lambda x: x[0] != x[1],
-                    zip([equaled_argument] * len(variants), variants),
-                )
-            ):
-                return False
-        return True
+        return (
+            len(self.required_arguments) == 0
+            or len(self.required_arguments) <= len(args)
+            and all(
+                argument in variants
+                for argument, variants in zip(args, self.required_arguments)
+            )
+        )
 
     async def __call__(self, message: types.Message):
         data = {}
@@ -231,10 +224,9 @@ class BotCanRestrict(Filter):
             chat_bot = (await message.chat.get_member(message.bot.id)).model_dump()
             await cache.set(f"chat_bot:{message.chat.id}", chat_bot, 600)
 
-        statement = chat_bot.get("status") in (
-            "administrator",
-            "creator",
-        ) and chat_bot.get("can_restrict_members")
+        statement = chat_bot.get("status") == "administrator" and chat_bot.get(
+            "can_restrict_members"
+        )
 
         if not statement:
             chat = await cache.get_chat(message.chat.id)
@@ -243,21 +235,6 @@ class BotCanRestrict(Filter):
             )
 
         return statement
-
-
-class RegExp(Filter):
-    def __init__(self, pattern, flags=0):
-        if isinstance(pattern, str):
-            pattern = compile(pattern, flags)
-        elif not isinstance(pattern, Pattern):
-            raise ValueError("pattern type not supported")
-        self.pattern = pattern
-
-    async def __call__(self, message: types.Message):
-        matches = list(self.pattern.finditer(message.text)) or None
-        if not matches:
-            return False
-        return dict(matches=matches)
 
 
 class LocalBotAdmin(Filter):
