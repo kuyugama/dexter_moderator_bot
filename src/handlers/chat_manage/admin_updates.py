@@ -54,10 +54,14 @@ async def me_new_chat_admin(chat_member: types.ChatMemberUpdated, chat: models.C
         f"chat_bot:{chat_member.chat.id}", new_admin.model_dump(), 600
     )
 
-    await chat_member.bot.send_message(
-        chat_id=chat_member.chat.id,
-        text=translations.get_string("bot_added_admin_rights", chat.language),
-    )
+    if chat_member.old_chat_member.status in (
+        "member",
+        "restricted",
+    ):
+        await chat_member.bot.send_message(
+            chat_id=chat_member.chat.id,
+            text=translations.get_string("bot_added_admin_rights", chat.language),
+        )
 
 
 @router.my_chat_member(removed_chat_admin_filter)
