@@ -176,7 +176,14 @@ class MemberCanRestrict(Filter):
 
         if not chat_administrators:
             chat_administrators = [
-                dict(id=admin.user.id, can_restrict=admin.can_restrict_members)
+                dict(
+                    id=admin.user.id,
+                    can_restrict=(
+                        admin.can_restrict_members
+                        if isinstance(admin, types.ChatMemberAdministrator)
+                        else isinstance(admin, types.ChatMemberOwner)
+                    ),
+                )
                 for admin in await chat.get_administrators()
             ]
             await cache.set(f"chat_administrators:{chat.id}", chat_administrators, 600)
