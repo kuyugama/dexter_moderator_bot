@@ -46,7 +46,7 @@ async def warn(message: types.Message, chat: models.Chat):
 
             victim = await message.chat.get_member(user_id)
 
-    if victim.is_chat_admin():
+    if isinstance(victim, (types.ChatMemberAdministrator, types.ChatMemberOwner)):
         return await message.reply(
             text=translations.get_string("warn.victim_is_admin", chat.language)
         )
