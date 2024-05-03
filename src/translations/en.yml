@@ -10,7 +10,7 @@ values:
 bot_admin_required: "Bot requires chat admin rights for this action."
 bot_cant_restrict_member: "Bot has no rights to restrict member."
 
-bot_added_admin_rights: "Thanks, for admin rights <3"
+bot_added_admin_rights: "Thanks, for admin rights &lt;3"
 bot_removed_admin_rights: "Give me back my rights, otherwise, 
 you can't be able to mute, kick and warn group members with my help."
 
