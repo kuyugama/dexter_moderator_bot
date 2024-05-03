@@ -81,7 +81,7 @@ def extract_user_mention(string: str) -> tuple[str | int, str] | None:
     if mention.startswith("id"):
         mention = int(mention[2:])
     else:
-        mention = mention[1:]
+        mention = mention[1:].lower()
 
     return mention, " ".join(
         word for word in mention_regex.sub("", string).split(" ") if word != ""
