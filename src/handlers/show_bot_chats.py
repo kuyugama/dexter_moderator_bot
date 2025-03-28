@@ -56,7 +56,7 @@ async def show_chats(message: types.Message):
             f"{index}. [{chat.id}] {chat_from_tg.full_name}\n"
             f"Is group: {chat.is_group}\n"
             f"Language: {chat.language}\n"
-            f"Bot is admin: {bot_member.is_chat_admin()}\n"
+            f"Bot is admin: {isinstance(bot_member, (types.ChatMemberOwner, types.ChatMemberAdministrator))}\n"
             f"Username: {chat_from_tg.username}\n"
             + (
                 f"Invite link: {invite_link}\n"
